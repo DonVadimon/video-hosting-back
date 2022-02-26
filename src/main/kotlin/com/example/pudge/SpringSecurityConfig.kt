@@ -27,24 +27,15 @@ class SpringSecurityConfig(
     private val jwtTokenRepository: JwtTokenRepository,
     @Qualifier("handlerExceptionResolver") private val resolver: HandlerExceptionResolver
 ) : WebSecurityConfigurerAdapter() {
+
     @Bean
-    fun devPasswordEncoder(): PasswordEncoder {
-        return NoOpPasswordEncoder.getInstance()
-    }
+    fun devPasswordEncoder(): PasswordEncoder = NoOpPasswordEncoder.getInstance()
 
     @Throws(java.lang.Exception::class)
     override fun configure(http: HttpSecurity) {
-        http
-            .sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.NEVER)
-            .and()
-            .addFilterAt(JwtCsrfFilter(jwtTokenRepository, resolver), CsrfFilter::class.java)
-            .csrf().ignoringAntMatchers("/**")
-            .and()
-            .authorizeRequests()
-            .antMatchers("/auth/login")
-            .authenticated()
-            .and()
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER).and()
+            .addFilterAt(JwtCsrfFilter(jwtTokenRepository, resolver), CsrfFilter::class.java).csrf()
+            .ignoringAntMatchers("/**").and().authorizeRequests().antMatchers("/auth/login").authenticated().and()
             .httpBasic()
             .authenticationEntryPoint { request: HttpServletRequest?, response: HttpServletResponse?, e: AuthenticationException? ->
                 resolver.resolveException(

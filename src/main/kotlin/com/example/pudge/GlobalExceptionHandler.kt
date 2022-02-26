@@ -30,6 +30,6 @@ class GlobalExceptionHandler(private val tokenRepository: JwtTokenRepository) : 
     ): ErrorInfo? {
         tokenRepository.clearToken(response)
         response.status = HttpServletResponse.SC_UNAUTHORIZED
-        return ErrorInfo(UrlUtils.buildFullRequestUrl(request), "error.authorization")
+        return ErrorInfo(UrlUtils.buildFullRequestUrl(request), ex?.message ?: "")
     }
 }

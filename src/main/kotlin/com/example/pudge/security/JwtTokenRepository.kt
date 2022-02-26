@@ -22,7 +22,7 @@ class JwtTokenRepository : CsrfTokenRepository {
     override fun generateToken(httpServletRequest: HttpServletRequest): CsrfToken {
         val id = UUID.randomUUID().toString().replace("-", "")
         val now = Date()
-        val exp = Date.from(
+        val exp: Date = Date.from(
             LocalDateTime.now().plusMinutes(30).atZone(ZoneId.systemDefault()).toInstant()
         )
         var token = ""
@@ -46,9 +46,8 @@ class JwtTokenRepository : CsrfTokenRepository {
         }
     }
 
-    override fun loadToken(request: HttpServletRequest): CsrfToken? {
-        return request.getAttribute(CsrfToken::class.java.name) as CsrfToken
-    }
+    override fun loadToken(request: HttpServletRequest): CsrfToken? =
+        request.getAttribute(CsrfToken::class.java.name) as CsrfToken?
 
     fun clearToken(response: HttpServletResponse) {
         if (response.headerNames.contains("x-csrf-token")) response.setHeader("x-csrf-token", "")

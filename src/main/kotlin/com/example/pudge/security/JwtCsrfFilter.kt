@@ -31,17 +31,17 @@ class JwtCsrfFilter(private val tokenRepository: CsrfTokenRepository, private va
             tokenRepository.saveToken(csrfToken, request, response)
         }
         request.setAttribute(CsrfToken::class.java.name, csrfToken)
-        request.setAttribute(csrfToken?.parameterName, csrfToken)
+        request.setAttribute(csrfToken!!.parameterName, csrfToken)
         if (request.servletPath == "/auth/login") {
             try {
                 filterChain.doFilter(request, response)
             } catch (e: Exception) {
-                resolver.resolveException(request, response, null, MissingCsrfTokenException(csrfToken?.token))
+                resolver.resolveException(request, response, null, MissingCsrfTokenException(csrfToken.token))
             }
         } else {
-            var actualToken = request.getHeader(csrfToken?.headerName)
+            var actualToken = request.getHeader(csrfToken.headerName)
             if (actualToken == null) {
-                actualToken = request.getParameter(csrfToken?.parameterName)
+                actualToken = request.getParameter(csrfToken.parameterName)
             }
             try {
                 if (!StringUtils.isEmpty(actualToken)) {

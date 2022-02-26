@@ -7,14 +7,12 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
-import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
-import java.util.*
 
 
 @Service
 class UserService(private val userRepository: UserRepository) : UserDetailsService {
-    fun getAllUsers(): Iterable<UserEntity> = this.userRepository.findAll()
+    fun getAll(): Iterable<UserEntity> = this.userRepository.findAll()
 
     fun getById(id: Long): UserEntity = this.userRepository.findByIdOrNull(id) ?: throw UserNotFoundException()
 
@@ -34,11 +32,8 @@ class UserService(private val userRepository: UserRepository) : UserDetailsServi
         return deletedUser
     }
 
-    override fun loadUserByUsername(username: String?): UserDetails {
-        val u = this.getByUsername(username ?: "")
-        if (Objects.isNull(u)) {
-            throw UsernameNotFoundException("User is not found $username")
-        }
-        return User(u.username, u.password, true, true, true, true, HashSet())
+    override fun loadUserByUsername(username: String): UserDetails {
+        val user = this.getByUsername(username)
+        return User(user.username, user.password, true, true, true, true, HashSet())
     }
 }
