@@ -9,11 +9,14 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import javax.validation.ValidationException
 
 
 @Service
-class UserService(private val userRepository: UserRepository) : UserDetailsService {
+class UserService(private val userRepository: UserRepository, private val passwordEncoder: PasswordEncoder) :
+    UserDetailsService {
     fun getAll(): Iterable<UserEntity> = this.userRepository.findAll()
 
     fun getById(id: Long): UserEntity = this.userRepository.findByIdOrNull(id) ?: throw UserNotFoundException()
@@ -21,11 +24,22 @@ class UserService(private val userRepository: UserRepository) : UserDetailsServi
     fun getByUsername(username: String): UserEntity =
         this.userRepository.findByUsername(username) ?: throw UserNotFoundException()
 
-    fun createUser(user: CreateUserDto): UserEntity {
-        if (this.userRepository.findByUsername(user.username) !== null) {
+    fun createUser(dto: CreateUserDto?): UserEntity {
+        if (dto == null) {
+            throw ValidationException("No register data")
+        }
+
+        if (dto.username?.let { this.userRepository.findByUsername(it) } !== null) {
             throw UserAlreadyExistException()
         }
-        return this.userRepository.save(UserEntity(user.username, user.password))
+
+        if (dto.password != dto.passwordRepeat) {
+            throw ValidationException("Passwords don't match")
+        }
+
+        val user = User(dto.username, passwordEncoder.encode(dto.password), HashSet())
+
+        return this.userRepository.save(UserEntity(username = user.username, password = user.password))
     }
 
     fun deleteUser(id: Long): UserEntity {

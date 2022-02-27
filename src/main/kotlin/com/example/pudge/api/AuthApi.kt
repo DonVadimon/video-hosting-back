@@ -2,10 +2,12 @@ package com.example.pudge.api
 
 
 import com.example.pudge.configuration.security.JwtTokenUtil
+import com.example.pudge.domain.dto.CreateUserDto
 import com.example.pudge.domain.dto.LoginUserDto
 import com.example.pudge.domain.dto.UserView
 import com.example.pudge.domain.entity.UserEntity
 import com.example.pudge.domain.entity.toUserView
+import com.example.pudge.service.UserService
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -21,13 +23,8 @@ import org.springframework.web.bind.annotation.*
 class AuthApi(
     private val authenticationManager: AuthenticationManager,
     private val jwtTokenUtil: JwtTokenUtil,
+    private val userService: UserService
 ) {
-
-    @GetMapping("test")
-    fun test(): ResponseEntity<String> {
-        return ResponseEntity.ok().body("huihuihiu")
-    }
-
     @PostMapping("login")
     fun login(@Validated @RequestBody request: LoginUserDto?): ResponseEntity<UserView> {
         return try {
@@ -44,8 +41,8 @@ class AuthApi(
         }
     }
 
-//    @PostMapping("register")
-//    fun register(@RequestBody @Validated request: CreateUserDto?): UserView {
-//        return userService.createUser(request!!)
-//    }
+    @PostMapping("register")
+    fun register(@RequestBody @Validated request: CreateUserDto?): UserView {
+        return userService.createUser(request).toUserView()
+    }
 }

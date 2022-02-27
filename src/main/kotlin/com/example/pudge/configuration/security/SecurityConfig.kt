@@ -50,11 +50,10 @@ class SecurityConfig(
             // Set unauthorized requests exception handler
             .exceptionHandling()
             .authenticationEntryPoint { request: HttpServletRequest?, response: HttpServletResponse, ex: AuthenticationException ->
-                ex.printStackTrace()
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.message)
             }.and()
             // Set permissions on endpoints
-            .authorizeRequests() // Swagger endpoints must be publicly accessible
+            .authorizeRequests()
             .antMatchers("/").permitAll().antMatchers("/api/public/**").permitAll()
             // Our private endpoints
             .anyRequest().authenticated().and()

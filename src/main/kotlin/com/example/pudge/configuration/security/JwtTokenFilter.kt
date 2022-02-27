@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.stereotype.Component
+import org.springframework.util.StringUtils
 import org.springframework.web.filter.OncePerRequestFilter
 import java.io.IOException
 import java.util.*
@@ -28,7 +29,7 @@ class JwtTokenFilter(
     ) {
         // Get authorization header and validate
         val header = request.getHeader(HttpHeaders.AUTHORIZATION)
-        if (header == "" || !header.startsWith("Bearer ")) {
+        if (StringUtils.isEmpty(header) || !header.startsWith("Bearer ")) {
             chain.doFilter(request, response)
             return
         }
