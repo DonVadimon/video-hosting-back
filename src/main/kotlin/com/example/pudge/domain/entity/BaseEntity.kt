@@ -1,4 +1,4 @@
-package com.example.pudge.shared
+package com.example.pudge.domain.entity
 
 import org.springframework.data.util.ProxyUtils
 import javax.persistence.GeneratedValue

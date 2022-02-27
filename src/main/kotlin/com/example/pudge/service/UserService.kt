@@ -1,8 +1,10 @@
-package com.example.pudge.users
+package com.example.pudge.service
 
-import com.example.pudge.users.dto.CreateUserDto
-import com.example.pudge.users.exceptions.UserAlreadyExistException
-import com.example.pudge.users.exceptions.UserNotFoundException
+import com.example.pudge.domain.dto.CreateUserDto
+import com.example.pudge.domain.entity.UserEntity
+import com.example.pudge.domain.exception.UserAlreadyExistException
+import com.example.pudge.domain.exception.UserNotFoundException
+import com.example.pudge.repository.UserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
