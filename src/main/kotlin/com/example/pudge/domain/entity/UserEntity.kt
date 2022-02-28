@@ -1,6 +1,5 @@
 package com.example.pudge.domain.entity
 
-import com.example.pudge.domain.dto.UserView
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.User
 import javax.persistence.Entity
@@ -22,7 +21,4 @@ class UserEntity(
             username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities
         )
     }
-
 }
-
-fun UserEntity.toUserView() = UserView(username = username)
