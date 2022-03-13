@@ -49,7 +49,7 @@ class SecurityConfig(
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
             // Set unauthorized requests exception handler
             .exceptionHandling()
-            .authenticationEntryPoint { request: HttpServletRequest?, response: HttpServletResponse, ex: AuthenticationException ->
+            .authenticationEntryPoint { _: HttpServletRequest?, response: HttpServletResponse, ex: AuthenticationException ->
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.message)
             }.and()
             // Set permissions on endpoints
