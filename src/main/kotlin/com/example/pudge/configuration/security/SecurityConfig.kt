@@ -2,6 +2,7 @@ package com.example.pudge.configuration.security
 
 
 import com.example.pudge.repository.UserRepository
+import com.example.pudge.domain.UserDetailsImpl
 import org.springframework.context.annotation.Bean
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
@@ -31,7 +32,7 @@ class SecurityConfig(
     @Throws(Exception::class)
     override fun configure(auth: AuthenticationManagerBuilder) {
         auth.userDetailsService(UserDetailsService { username: String? ->
-            userRepo.findByUsername(username ?: "")?.toUser()
+            UserDetailsImpl.build(userRepo.findByUsername(username ?: "")!!)
         })
     }
 

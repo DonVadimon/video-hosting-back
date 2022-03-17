@@ -2,6 +2,7 @@ package com.example.pudge.configuration.security
 
 
 import com.example.pudge.repository.UserRepository
+import com.example.pudge.domain.UserDetailsImpl
 import org.springframework.http.HttpHeaders
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
@@ -42,11 +43,9 @@ class JwtTokenFilter(
         }
 
         // Get user identity and set it on the spring security context
-        val userDetails: UserDetails = userRepo.findByUsername(jwtTokenUtil.getUsername(token))!!.toUser()
+        val userDetails: UserDetails = UserDetailsImpl.build(userRepo.findByUsername(jwtTokenUtil.getUsername(token))!!)
         val authentication = UsernamePasswordAuthenticationToken(
-            userDetails,
-            null,
-            Optional.ofNullable(userDetails).map { obj: UserDetails -> obj.authorities }.orElse(listOf())
+            userDetails, null, Optional.ofNullable(userDetails).map { obj -> obj.authorities }.orElse(listOf())
         )
         authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
         SecurityContextHolder.getContext().authentication = authentication

@@ -8,4 +8,5 @@ data class CreateUserDto(
     @field:NotNull @field:NotBlank var username: String?,
     @field:NotNull @field:NotBlank var password: String?,
     @field:NotNull @field:NotBlank var passwordRepeat: String?,
+    var authorities: Set<String>? = null
 ) : Serializable

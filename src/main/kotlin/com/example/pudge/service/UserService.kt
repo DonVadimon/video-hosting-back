@@ -1,12 +1,14 @@
 package com.example.pudge.service
 
+import com.example.pudge.domain.UserDetailsImpl
 import com.example.pudge.domain.dto.CreateUserDto
+import com.example.pudge.domain.dto.UpdateUserDto
 import com.example.pudge.domain.entity.UserEntity
 import com.example.pudge.domain.exception.UserAlreadyExistException
 import com.example.pudge.domain.exception.UserNotFoundException
+import com.example.pudge.domain.mapper.UserEditMapper
 import com.example.pudge.repository.UserRepository
 import org.springframework.data.repository.findByIdOrNull
-import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -15,8 +17,11 @@ import javax.validation.ValidationException
 
 
 @Service
-class UserService(private val userRepository: UserRepository, private val passwordEncoder: PasswordEncoder) :
-    UserDetailsService {
+class UserService(
+    private val userRepository: UserRepository,
+    private val passwordEncoder: PasswordEncoder,
+    private val userEditMapper: UserEditMapper
+) : UserDetailsService {
     fun getAll(): Iterable<UserEntity> = this.userRepository.findAll()
 
     fun getById(id: Long): UserEntity = this.userRepository.findByIdOrNull(id) ?: throw UserNotFoundException()
@@ -37,9 +42,10 @@ class UserService(private val userRepository: UserRepository, private val passwo
             throw ValidationException("Passwords don't match")
         }
 
-        val user = User(dto.username, passwordEncoder.encode(dto.password), HashSet())
+        val user = userEditMapper.createUserDtoToUserEntity(dto)!!
+        user.password = passwordEncoder.encode(dto.password)
 
-        return this.userRepository.save(UserEntity(username = user.username, password = user.password))
+        return this.userRepository.save(user)
     }
 
     fun deleteUser(id: Long): UserEntity {
@@ -50,6 +56,22 @@ class UserService(private val userRepository: UserRepository, private val passwo
 
     override fun loadUserByUsername(username: String): UserDetails {
         val user = this.getByUsername(username)
-        return User(user.username, user.password, true, true, true, true, HashSet())
+        return UserDetailsImpl.build(user)
+    }
+
+    fun update(id: Long, dto: UpdateUserDto?): UserEntity? {
+        val user = this.getById(id)
+        userEditMapper.updateUserDtoToUserEntity(dto, user)
+        return userRepository.save(user)
+    }
+
+    fun upsert(dto: CreateUserDto): UserEntity? {
+        val optionalUser = userRepository.findByUsername(dto.username ?: "")
+        return if (optionalUser == null) {
+            createUser(dto)
+        } else {
+            val updateUserRequest = UpdateUserDto(authorities = dto.authorities)
+            update(optionalUser.id!!, updateUserRequest)
+        }
     }
 }
