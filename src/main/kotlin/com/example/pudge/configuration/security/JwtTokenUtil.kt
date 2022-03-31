@@ -4,16 +4,18 @@ package com.example.pudge.configuration.security
 import com.example.pudge.domain.entity.UserEntity
 import io.jsonwebtoken.*
 import org.slf4j.Logger
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.util.*
 
 
 @Component
 class JwtTokenUtil(
-    private val jwtSecret: String? = "zdtlD3JK56m6wTTgsNFhqzjqP",
-    private val jwtIssuer: String? = "example.io",
-    private val logger: Logger? = null
+    private val jwtIssuer: String? = "example.io", private val logger: Logger? = null
 ) {
+
+    @Value("\${app.jwt-secret}")
+    private lateinit var jwtSecret: String
 
     fun generateAccessToken(user: UserEntity): String {
         return Jwts.builder().setSubject("${user.id},${user.username}").setIssuer(jwtIssuer).setIssuedAt(Date())
