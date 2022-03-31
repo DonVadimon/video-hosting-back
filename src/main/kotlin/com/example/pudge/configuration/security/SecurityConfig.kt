@@ -1,8 +1,8 @@
 package com.example.pudge.configuration.security
 
 
-import com.example.pudge.repository.UserRepository
 import com.example.pudge.domain.UserDetailsImpl
+import com.example.pudge.repository.UserRepository
 import org.springframework.context.annotation.Bean
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
@@ -54,8 +54,7 @@ class SecurityConfig(
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.message)
             }.and()
             // Set permissions on endpoints
-            .authorizeRequests()
-            .antMatchers("/").permitAll().antMatchers("/api/public/**").permitAll()
+            .authorizeRequests().antMatchers("/auth/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
             // Our private endpoints
             .anyRequest().authenticated().and()
             // Add JWT token filter

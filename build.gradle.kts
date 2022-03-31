@@ -41,6 +41,10 @@ dependencies {
     implementation("org.mapstruct:mapstruct:1.4.2.Final")
     kapt("org.mapstruct:mapstruct-processor:1.4.2.Final")
 
+    implementation("org.springdoc:springdoc-openapi-data-rest:1.6.0")
+    implementation("org.springdoc:springdoc-openapi-ui:1.6.0")
+    implementation("org.springdoc:springdoc-openapi-kotlin:1.6.0")
+
     runtimeOnly("org.postgresql:postgresql")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")

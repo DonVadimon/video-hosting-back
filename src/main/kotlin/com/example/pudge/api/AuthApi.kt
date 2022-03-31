@@ -25,7 +25,7 @@ import javax.validation.Valid
 
 
 @RestController
-@RequestMapping(path = ["api/public"])
+@RequestMapping(path = ["auth"])
 class AuthApi(
     private val authenticationManager: AuthenticationManager,
     private val jwtTokenUtil: JwtTokenUtil,
