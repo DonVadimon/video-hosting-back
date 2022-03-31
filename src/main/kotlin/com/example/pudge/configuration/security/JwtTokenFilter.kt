@@ -30,7 +30,7 @@ class JwtTokenFilter(
     ) {
         // Get authorization header and validate
         val header = request.getHeader(HttpHeaders.AUTHORIZATION)
-        if (StringUtils.isEmpty(header) || !header.startsWith("Bearer ")) {
+        if (!StringUtils.hasLength(header) || !header.startsWith("Bearer ")) {
             chain.doFilter(request, response)
             return
         }
