@@ -1,1 +1,1 @@
-rootProject.name = "pudge"
+rootProject.name = "springboot.videohosting.app"
