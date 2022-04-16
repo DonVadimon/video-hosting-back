@@ -18,6 +18,8 @@ class UserEntity(
         joinColumns = [JoinColumn(name = "user_id")],
         inverseJoinColumns = [JoinColumn(name = "authority_id")]
     ) var authorities: MutableSet<AuthorityEntity> = HashSet(),
+    @ManyToOne @JoinColumn(name = "user_group_entity_id", nullable = true)
+    var group: UserGroupEntity? = null
 ) : BaseEntity<Long>() {
     //Convert this class to Spring Security's User object
     fun toUser() = User(
