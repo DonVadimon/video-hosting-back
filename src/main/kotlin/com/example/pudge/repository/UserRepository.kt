@@ -2,11 +2,12 @@ package com.example.pudge.repository
 
 import com.example.pudge.domain.entity.ConstAuthorities
 import com.example.pudge.domain.entity.UserEntity
+import com.example.pudge.domain.projection.UserProjection
 import org.springframework.data.repository.PagingAndSortingRepository
 import org.springframework.data.rest.core.annotation.RepositoryRestResource
 import org.springframework.security.access.prepost.PreAuthorize
 
-@RepositoryRestResource(path = "users")
+@RepositoryRestResource(path = "users", excerptProjection = UserProjection::class)
 interface UserRepository : PagingAndSortingRepository<UserEntity, Long> {
     fun findByUsername(username: String): UserEntity?
 

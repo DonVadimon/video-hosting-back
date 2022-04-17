@@ -2,12 +2,12 @@ package com.example.pudge.repository
 
 import com.example.pudge.domain.entity.ConstAuthorities
 import com.example.pudge.domain.entity.VideoEntity
-import com.example.pudge.domain.projection.AuthorProjection
+import com.example.pudge.domain.projection.VideoProjection
 import org.springframework.data.repository.PagingAndSortingRepository
 import org.springframework.data.rest.core.annotation.RepositoryRestResource
 import org.springframework.security.access.prepost.PreAuthorize
 
-@RepositoryRestResource(path = "videos", excerptProjection = AuthorProjection::class)
+@RepositoryRestResource(path = "videos", excerptProjection = VideoProjection::class)
 interface VideoRepository : PagingAndSortingRepository<VideoEntity, Long> {
     fun findByName(name: String): VideoEntity?
 
