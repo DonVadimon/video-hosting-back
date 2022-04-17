@@ -1,24 +1,28 @@
 package com.example.pudge.repository
 
 import com.example.pudge.domain.entity.ConstAuthorities
-import com.example.pudge.domain.entity.UserGroupEntity
-import org.springframework.data.repository.CrudRepository
+import com.example.pudge.domain.entity.VideoEntity
+import com.example.pudge.domain.projection.AuthorProjection
+import org.springframework.data.repository.PagingAndSortingRepository
 import org.springframework.data.rest.core.annotation.RepositoryRestResource
 import org.springframework.security.access.prepost.PreAuthorize
 
+@RepositoryRestResource(path = "videos", excerptProjection = AuthorProjection::class)
+interface VideoRepository : PagingAndSortingRepository<VideoEntity, Long> {
+    fun findByName(name: String): VideoEntity?
 
-@RepositoryRestResource(path = "user-groups")
-interface UserGroupRepository : CrudRepository<UserGroupEntity, Long> {
-    fun findByName(name: String): UserGroupEntity?
+    fun findByNameContainingIgnoreCase(searchName: String): VideoEntity?
+
+    fun findAllByAuthor_Username(username: String): MutableIterable<VideoEntity>
 
     @PreAuthorize("hasRole('${ConstAuthorities.VIDEO_CREATOR.name}') or hasRole('${ConstAuthorities.ADMIN.name}')")
     override fun deleteById(id: Long)
 
     @PreAuthorize("hasRole('${ConstAuthorities.VIDEO_CREATOR.name}') or hasRole('${ConstAuthorities.ADMIN.name}')")
-    override fun delete(entity: UserGroupEntity)
+    override fun delete(entity: VideoEntity)
 
     @PreAuthorize("hasRole('${ConstAuthorities.VIDEO_CREATOR.name}') or hasRole('${ConstAuthorities.ADMIN.name}')")
-    override fun deleteAll(entities: MutableIterable<UserGroupEntity>)
+    override fun deleteAll(entities: MutableIterable<VideoEntity>)
 
     @PreAuthorize("hasRole('${ConstAuthorities.VIDEO_CREATOR.name}') or hasRole('${ConstAuthorities.ADMIN.name}')")
     override fun deleteAll()
@@ -27,8 +31,8 @@ interface UserGroupRepository : CrudRepository<UserGroupEntity, Long> {
     override fun deleteAllById(ids: MutableIterable<Long>)
 
     @PreAuthorize("hasRole('${ConstAuthorities.VIDEO_CREATOR.name}') or hasRole('${ConstAuthorities.ADMIN.name}')")
-    override fun <S : UserGroupEntity?> save(entity: S): S
+    override fun <S : VideoEntity?> save(entity: S): S
 
     @PreAuthorize("hasRole('${ConstAuthorities.VIDEO_CREATOR.name}') or hasRole('${ConstAuthorities.ADMIN.name}')")
-    override fun <S : UserGroupEntity?> saveAll(entities: MutableIterable<S>): MutableIterable<S>
+    override fun <S : VideoEntity?> saveAll(entities: MutableIterable<S>): MutableIterable<S>
 }
