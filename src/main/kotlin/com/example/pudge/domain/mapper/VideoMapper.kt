@@ -32,9 +32,9 @@ abstract class VideoMapper {
         }
     }
 
-    private fun mapAuthor(authorId: Long?, video: VideoEntity) {
-        if (authorId !== null) {
-            video.author = userService!!.getById(authorId)
+    private fun mapAuthor(authorUsername: String?, video: VideoEntity) {
+        if (authorUsername !== null) {
+            video.author = userService!!.getByUsername(authorUsername)
         }
     }
 
@@ -52,7 +52,8 @@ abstract class VideoMapper {
 
     @BeanMapping(
         nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS,
-        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
+        nullValueMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT
     )
     @Mapping(target = "allowedGroups", ignore = true)
     abstract fun updateVideoDtoToVideoEntity(

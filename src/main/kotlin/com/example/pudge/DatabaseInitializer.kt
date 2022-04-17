@@ -32,13 +32,26 @@ class DatabaseInitializer(
 
     private val defaultUsers = listOf(
         CreateUserDto(
-            "ordinary", password, password, setOf(Authorities.ORDINARY_USER.toString()), defaultGroupName
+            username = "ordinary",
+            name = "Ordinary User",
+            password = password,
+            passwordRepeat = password,
+            authorities = setOf(Authorities.ORDINARY_USER.toString()),
+            group = defaultGroupName
         ),
         CreateUserDto(
-            "maker", password, password, setOf(Authorities.VIDEO_CREATOR.toString())
+            username = "maker",
+            name = "VideoMaker User",
+            password = password,
+            passwordRepeat = password,
+            authorities = setOf(Authorities.VIDEO_CREATOR.toString())
         ),
         CreateUserDto(
-            "admin", password, password, setOf(Authorities.ADMIN.toString())
+            username = "admin",
+            name = "Admin User",
+            password = password,
+            passwordRepeat = password,
+            authorities = setOf(Authorities.ADMIN.toString())
         ),
     )
 
@@ -46,7 +59,7 @@ class DatabaseInitializer(
         name = "Rick Astley - Never Gonna Give You Up",
         description = "“Never Gonna Give You Up” was a global smash on its release in July 1987, topping the charts in 25 countries including Rick’s native UK and the US Billboard Hot 100.",
         source = "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-        author = 3,
+        author = "admin",
         allowedGroups = mutableSetOf(defaultGroupName)
     )
 

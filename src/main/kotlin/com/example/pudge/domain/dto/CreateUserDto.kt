@@ -9,6 +9,7 @@ data class CreateUserDto(
     @field:NotNull @field:NotBlank var username: String?,
     @field:NotNull @field:NotBlank var password: String?,
     @field:NotNull @field:NotBlank var passwordRepeat: String?,
+    var name: String? = null,
     override var authorities: Set<String?>? = null,
     override var group: String? = null
 ) : Serializable, UserForeignFields

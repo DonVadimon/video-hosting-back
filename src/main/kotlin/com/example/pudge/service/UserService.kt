@@ -70,7 +70,7 @@ class UserService(
         return if (optionalUser == null) {
             createUser(dto)
         } else {
-            val updateUserDto = UpdateUserDto(authorities = dto.authorities, group = dto.group)
+            val updateUserDto = UpdateUserDto(name = dto.name, authorities = dto.authorities, group = dto.group)
             update(optionalUser.id!!, updateUserDto)
         }
     }

@@ -21,7 +21,7 @@ class UserEntity(
         inverseJoinColumns = [JoinColumn(name = "authority_id")]
     ) var authorities: MutableSet<AuthorityEntity> = HashSet(),
     @ManyToOne @JoinColumn(name = "user_group_entity_id", nullable = true) var group: UserGroupEntity? = null,
-    @Column(length = 100, unique = true) val name: String,
+    @Column(length = 512) var name: String = "",
     @OneToMany(
         mappedBy = "author", fetch = FetchType.LAZY, orphanRemoval = true, cascade = [CascadeType.ALL]
     ) val videos: MutableList<VideoEntity> = mutableListOf()

@@ -51,7 +51,8 @@ abstract class UserEditMapper {
 
     @BeanMapping(
         nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS,
-        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
+        nullValueMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT
     )
     @Mapping(target = "authorities", ignore = true)
     @Mapping(target = "group", ignore = true)

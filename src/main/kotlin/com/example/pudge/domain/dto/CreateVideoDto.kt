@@ -7,6 +7,6 @@ data class CreateVideoDto(
     @field:NotNull @field:NotBlank var name: String,
     @field:NotNull @field:NotBlank var description: String,
     @field:NotNull @field:NotBlank var source: String,
-    @field:NotNull var author: Long,
+    @field:NotNull var author: String,
     @field:NotNull var allowedGroups: MutableSet<String> = HashSet(),
 ) : java.io.Serializable
