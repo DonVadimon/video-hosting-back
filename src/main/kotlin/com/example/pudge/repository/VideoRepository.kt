@@ -15,6 +15,8 @@ interface VideoRepository : PagingAndSortingRepository<VideoEntity, Long> {
 
     fun findAllByAuthor_Username(username: String): MutableIterable<VideoEntity>
 
+    fun findALlByAuthor_Id(id: Long): MutableIterable<VideoEntity>
+
     @PreAuthorize("hasRole('${ConstAuthorities.VIDEO_CREATOR.name}') or hasRole('${ConstAuthorities.ADMIN.name}')")
     override fun deleteById(id: Long)
 

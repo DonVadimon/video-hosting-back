@@ -6,7 +6,6 @@ import com.example.pudge.domain.UserDetailsImpl
 import com.example.pudge.domain.dto.CommonAuthResponse
 import com.example.pudge.domain.dto.CreateUserDto
 import com.example.pudge.domain.dto.LoginUserDto
-import com.example.pudge.domain.dto.UserView
 import com.example.pudge.domain.entity.Authorities
 import com.example.pudge.domain.mapper.UserViewMapper
 import com.example.pudge.service.UserService
@@ -50,8 +49,13 @@ class AuthApi(
     }
 
     @PostMapping("register")
-    fun register(@RequestBody @Validated request: CreateUserDto?): UserView {
+    fun register(@RequestBody @Validated request: CreateUserDto?): ResponseEntity<CommonAuthResponse> {
         request?.authorities = setOf(Authorities.ORDINARY_USER.toString())
-        return userViewMapper.toUserView(userService.createUser(request))!!
+        return try {
+            ResponseEntity.status(HttpStatus.OK)
+                .body(CommonAuthResponse(user = userViewMapper.toUserView(userService.createUser(request))!!))
+        } catch (ex: Exception) {
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).body(CommonAuthResponse(errorMessage = ex.message))
+        }
     }
 }

@@ -13,6 +13,8 @@ interface UserRepository : PagingAndSortingRepository<UserEntity, Long> {
 
     fun findAllByGroup_Name(group: String): MutableIterable<UserEntity>
 
+    fun findAllByGroupIsNull(): MutableIterable<UserEntity>
+
     @PreAuthorize("hasRole('${ConstAuthorities.ADMIN.name}')")
     override fun deleteById(id: Long)
 
@@ -28,7 +30,7 @@ interface UserRepository : PagingAndSortingRepository<UserEntity, Long> {
     @PreAuthorize("hasRole('${ConstAuthorities.ADMIN.name}')")
     override fun deleteAllById(ids: MutableIterable<Long>)
 
-    @PreAuthorize("#entity.username == authentication.name or hasRole('${ConstAuthorities.ADMIN.name}')")
+    @PreAuthorize("hasRole('${ConstAuthorities.ADMIN.name}')")
     override fun <S : UserEntity?> save(entity: S): S
 
     @PreAuthorize("hasRole('${ConstAuthorities.ADMIN.name}')")

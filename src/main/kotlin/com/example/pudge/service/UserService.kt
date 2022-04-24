@@ -1,5 +1,6 @@
 package com.example.pudge.service
 
+import com.example.pudge.configuration.security.SecurityUtils
 import com.example.pudge.domain.UserDetailsImpl
 import com.example.pudge.domain.dto.CreateUserDto
 import com.example.pudge.domain.dto.UpdateUserDto
@@ -18,6 +19,7 @@ import javax.validation.ValidationException
 
 @Service
 class UserService(
+    private val securityUtils: SecurityUtils,
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
     private val userEditMapper: UserEditMapper
@@ -45,7 +47,13 @@ class UserService(
         val user = userEditMapper.createUserDtoToUserEntity(dto)!!
         user.password = passwordEncoder.encode(dto.password)
 
-        return this.userRepository.save(user)
+        securityUtils.createAnonymousContext()
+
+        val createdUser = this.userRepository.save(user)
+
+        securityUtils.clearContext()
+
+        return createdUser
     }
 
     fun deleteUser(id: Long): UserEntity {
