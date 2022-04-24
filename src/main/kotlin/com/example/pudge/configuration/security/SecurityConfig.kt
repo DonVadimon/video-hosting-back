@@ -71,6 +71,7 @@ class SecurityConfig(
         config.addAllowedOrigin("http://localhost:4000")
         config.addAllowedOrigin("https://video-hosting-app.vercel.app/")
         config.addAllowedHeader("*")
+        config.addExposedHeader("Authorization")
         config.addAllowedMethod("*")
         source.registerCorsConfiguration("/**", config)
         return CorsFilter(source)
