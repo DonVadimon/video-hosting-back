@@ -47,6 +47,13 @@ class DatabaseInitializer(
             passwordRepeat = password,
             authorities = setOf(Authorities.ADMIN.toString())
         ),
+        CreateUserDto(
+            username = "Sanya",
+            name = "Sanya Sanya",
+            password = "sanya_lox",
+            passwordRepeat = "sanya_lox",
+            authorities = setOf(Authorities.ORDINARY_USER.toString(), Authorities.VIDEO_CREATOR.toString(), Authorities.ADMIN.toString())
+        ),
     )
 
     private val defaultVideo = CreateVideoDto(

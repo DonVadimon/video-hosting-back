@@ -8,7 +8,7 @@ class VideoEntity(
     @Column(length = 2048, unique = true, nullable = false) var name: String,
     @Column(columnDefinition = "TEXT", nullable = false) var description: String,
     @Column(length = 4096, nullable = false) var source: String,
-    @ManyToOne @JoinColumn(name = "author_id", nullable = false) var author: UserEntity?,
+    @ManyToOne @JoinColumn(name = "author_id") var author: UserEntity?,
     @ManyToMany(fetch = FetchType.EAGER) @JoinTable(
         name = "video_groups",
         joinColumns = [JoinColumn(name = "video_id")],
