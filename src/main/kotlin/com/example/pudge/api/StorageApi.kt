@@ -5,6 +5,7 @@ import com.example.pudge.service.StorageService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 import java.util.*
 import javax.annotation.security.RolesAllowed
 
@@ -44,12 +45,13 @@ class StorageApi(
             .body(sourceFile)
     }
 
-//    @PostMapping("{bucket}")
-//    fun uploadFile(
-//        @PathVariable("bucket") bucket: String,
-//        @RequestPart("files") uploadFiles : Array<MultipartFile>
-//    ): ResponseEntity<Any?> {
-//        val awsResponse = storageService.uploadFiles(bucket, uploadFiles)
-//        return ResponseEntity(awsResponse, HttpStatus.OK)
-//    }
+    @PostMapping("{bucket}")
+    fun uploadFile(
+        @PathVariable("bucket") bucket: String,
+        @RequestPart("file") file : MultipartFile
+    ): ResponseEntity<Any?> {
+        val awsResponse = storageService.uploadFile(bucket, file)
+        return ResponseEntity(awsResponse, HttpStatus.OK)
+    }
+
 }

@@ -1,19 +1,6 @@
 package com.example.pudge.service
 
-import com.example.pudge.configuration.security.SecurityUtils
-import com.example.pudge.domain.UserDetailsImpl
-import com.example.pudge.domain.dto.CreateUserDto
-import com.example.pudge.domain.dto.UpdateUserDto
-import com.example.pudge.domain.entity.UserEntity
-import com.example.pudge.domain.exception.UserAlreadyExistException
-import com.example.pudge.domain.exception.UserNotFoundException
-import com.example.pudge.domain.mapper.UserEditMapper
-import com.example.pudge.repository.UserRepository
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.scheduling.annotation.Async
-import org.springframework.security.core.userdetails.UserDetails
-import org.springframework.security.core.userdetails.UserDetailsService
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import software.amazon.awssdk.http.SdkHttpResponse
@@ -21,11 +8,10 @@ import software.amazon.awssdk.services.s3.S3Client
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest
 import software.amazon.awssdk.services.s3.model.GetObjectRequest
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request
-import javax.validation.ValidationException
+import software.amazon.awssdk.core.sync.RequestBody
+import software.amazon.awssdk.services.s3.model.PutObjectRequest
+import java.util.*
 
-
-//import org.springframework.web.multipart.MultipartFile
-//import software.amazon.awssdk.http.SdkHttpResponse
 
 interface StorageService {
 
@@ -35,7 +21,7 @@ interface StorageService {
 
     fun deleteFile(bucketName: String, fileKey: String) : SdkHttpResponse
 
-//    fun uploadFiles(bucketName: String, files: Array<MultipartFile>) : List<S3BulkResponseEntity>
+    fun uploadFile(bucketName: String, file: MultipartFile) : SdkHttpResponse
 
 }
 
@@ -58,4 +44,16 @@ class S3Service(var s3Client: S3Client) : StorageService {
         return s3Client.deleteObject(
             DeleteObjectRequest.builder().bucket(bucketName).key(fileKey).build()).sdkHttpResponse()
     }
+
+    @Async
+    override fun uploadFile(bucketName: String, file: MultipartFile) : SdkHttpResponse {
+        val fileKey = UUID.randomUUID().toString()
+        return s3Client.putObject(PutObjectRequest.builder()
+            .bucket(bucketName)
+            .key(fileKey)
+            .build(),
+            RequestBody.fromBytes(file.bytes)
+        ).sdkHttpResponse()
+    }
+
 }
