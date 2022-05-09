@@ -2,11 +2,9 @@ package com.example.pudge.api
 
 import com.example.pudge.domain.entity.ConstAuthorities
 import com.example.pudge.service.StorageService
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.util.*
 import javax.annotation.security.RolesAllowed
 
@@ -26,4 +24,32 @@ class StorageApi(
     ): ResponseEntity<List<String>> {
         return ResponseEntity.of(Optional.of(storageService.getBucketFileList(bucket)))
     }
+
+    @DeleteMapping("{bucket}/{file}")
+    fun deleteFile(
+        @PathVariable("bucket") bucket: String,
+        @PathVariable("file") fileKey: String): ResponseEntity<Any?> {
+        val responseEntity = storageService.deleteFile(bucket, fileKey)
+        return ResponseEntity(responseEntity, HttpStatus.valueOf(responseEntity.statusCode()))
+    }
+
+    @GetMapping("{bucket}/{file}")
+    fun downloadFile(
+        @PathVariable("bucket") bucket: String,
+        @PathVariable("file") fileKey: String): ResponseEntity<ByteArray> {
+        val sourceFile : ByteArray = storageService.downloadFile(bucket, fileKey)
+        return ResponseEntity.ok().contentLength(sourceFile.size.toLong())
+            .header("Content-type", "application/octet-stream")
+            .header("Content-disposition", "attachment; filename=\"$fileKey\"")
+            .body(sourceFile)
+    }
+
+//    @PostMapping("{bucket}")
+//    fun uploadFile(
+//        @PathVariable("bucket") bucket: String,
+//        @RequestPart("files") uploadFiles : Array<MultipartFile>
+//    ): ResponseEntity<Any?> {
+//        val awsResponse = storageService.uploadFiles(bucket, uploadFiles)
+//        return ResponseEntity(awsResponse, HttpStatus.OK)
+//    }
 }
