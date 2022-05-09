@@ -45,6 +45,13 @@ class StorageApi(
             .body(sourceFile)
     }
 
+    @GetMapping("{bucket}/{file}/url")
+    fun getFileUrl(
+        @PathVariable("bucket") bucket: String,
+        @PathVariable("file") fileKey: String): ResponseEntity<String> {
+        return ResponseEntity.of(Optional.of(storageService.getFileUrl(bucket, fileKey)))
+    }
+
     @PostMapping("{bucket}")
     fun uploadFile(
         @PathVariable("bucket") bucket: String,

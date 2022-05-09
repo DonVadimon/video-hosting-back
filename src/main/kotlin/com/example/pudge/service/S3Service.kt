@@ -15,9 +15,13 @@ import java.util.*
 
 interface StorageService {
 
+    // Bucket manipulations.
     fun getBucketFileList(bucketName: String) : List<String>
 
+    // File manipulations.
     fun downloadFile(bucketName: String, fileKey: String) : ByteArray
+
+    fun getFileUrl(bucketName: String, fileKey: String) : String
 
     fun deleteFile(bucketName: String, fileKey: String) : SdkHttpResponse
 
@@ -38,6 +42,12 @@ class S3Service(var s3Client: S3Client) : StorageService {
     override fun downloadFile(bucketName: String, fileKey: String) : ByteArray {
         return s3Client.getObject(
             GetObjectRequest.builder().bucket(bucketName).key(fileKey).build()).readAllBytes()
+    }
+
+    @Async
+    override fun getFileUrl(bucketName: String, fileKey: String) : String {
+        return s3Client.utilities().getUrl { builder -> builder.bucket(bucketName).key(fileKey) }
+            .toExternalForm()
     }
 
     override fun deleteFile(bucketName: String, fileKey: String) : SdkHttpResponse {
