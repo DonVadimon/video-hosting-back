@@ -53,6 +53,10 @@ dependencies {
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+    // * Utils.
+    // - File extension parser.
+    implementation("commons-io:commons-io:2.11.0")
 }
 
 allOpen {

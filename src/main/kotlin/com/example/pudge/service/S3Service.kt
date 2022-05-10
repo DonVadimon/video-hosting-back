@@ -1,5 +1,7 @@
 package com.example.pudge.service
 
+import com.example.pudge.domain.S3Object
+import org.apache.commons.io.FilenameUtils
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
@@ -12,10 +14,10 @@ import java.util.*
 
 interface StorageService {
 
-    // Bucket manipulations.
+    // * Bucket manipulations.
     fun getBucketFileList(bucketName: String): List<String>
 
-    // File manipulations.
+    // * File manipulations.
     fun downloadFile(bucketName: String, fileKey: String): ByteArray
 
     fun getFileUrl(bucketName: String, fileKey: String): String
@@ -56,13 +58,11 @@ class S3Service(var s3Client: S3Client) : StorageService {
 
     @Async
     override fun uploadFile(bucketName: String, file: MultipartFile): String {
-        // Should be unique in the bucket.
-        val fileKey = file.name + UUID.randomUUID().toString()
-
+        val s3File = S3Object(file)
         val acl: ObjectCannedACL = ObjectCannedACL.PUBLIC_READ
         val putObjectRequest = PutObjectRequest.builder()
             .bucket(bucketName)
-            .key(fileKey)
+            .key(s3File.key)
             // Access Control List.
             .acl(acl)
             .build()
@@ -73,7 +73,7 @@ class S3Service(var s3Client: S3Client) : StorageService {
         )
             .sdkHttpResponse()
 
-        return getFileUrl(bucketName, fileKey)
+        return getFileUrl(bucketName, s3File.key)
     }
 
 }
