@@ -14,12 +14,8 @@ import javax.annotation.security.RolesAllowed
 class StorageApi(
     private var storageService: StorageService
 ) {
-    @GetMapping("test")
-    @RolesAllowed(ConstAuthorities.ADMIN.name, ConstAuthorities.VIDEO_CREATOR.name)
-    fun helloAdmin() = ResponseEntity.ok("Hello, Admin")
 
     @GetMapping("{bucket}")
-    @RolesAllowed(ConstAuthorities.ADMIN.name, ConstAuthorities.VIDEO_CREATOR.name)
     fun getFileList(
         @PathVariable("bucket") bucket: String
     ): ResponseEntity<List<String>> {
@@ -27,6 +23,7 @@ class StorageApi(
     }
 
     @DeleteMapping("{bucket}/{file}")
+    @RolesAllowed(ConstAuthorities.ADMIN.name, ConstAuthorities.VIDEO_CREATOR.name)
     fun deleteFile(
         @PathVariable("bucket") bucket: String,
         @PathVariable("file") fileKey: String): ResponseEntity<Any?> {
@@ -53,12 +50,13 @@ class StorageApi(
     }
 
     @PostMapping("{bucket}")
+    @RolesAllowed(ConstAuthorities.ADMIN.name, ConstAuthorities.VIDEO_CREATOR.name)
     fun uploadFile(
         @PathVariable("bucket") bucket: String,
         @RequestPart("file") file : MultipartFile
     ): ResponseEntity<Any?> {
         val awsResponse = storageService.uploadFile(bucket, file)
-        return ResponseEntity(awsResponse, HttpStatus.OK)
+        return ResponseEntity.ok(awsResponse)
     }
 
 }
