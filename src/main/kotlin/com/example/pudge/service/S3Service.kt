@@ -25,7 +25,7 @@ interface StorageService {
 
     fun deleteFile(bucketName: String, fileKey: String) : SdkHttpResponse
 
-    fun uploadFile(bucketName: String, file: MultipartFile) : SdkHttpResponse
+    fun uploadFile(bucketName: String, file: MultipartFile) : String
 
 }
 
@@ -56,14 +56,16 @@ class S3Service(var s3Client: S3Client) : StorageService {
     }
 
     @Async
-    override fun uploadFile(bucketName: String, file: MultipartFile) : SdkHttpResponse {
-        val fileKey = UUID.randomUUID().toString()
-        return s3Client.putObject(PutObjectRequest.builder()
+    override fun uploadFile(bucketName: String, file: MultipartFile) : String {
+        val fileKey = file.name + UUID.randomUUID().toString()
+        val response = s3Client.putObject(PutObjectRequest.builder()
             .bucket(bucketName)
             .key(fileKey)
             .build(),
             RequestBody.fromBytes(file.bytes)
         ).sdkHttpResponse()
+
+        return getFileUrl(bucketName, fileKey)
     }
 
 }
