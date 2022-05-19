@@ -9,3 +9,5 @@
   - swagger
   - OpenAPI ts client generation script
   - Heroku deploy
+- AWS
+  - S3

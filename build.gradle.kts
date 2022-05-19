@@ -26,6 +26,10 @@ kapt {
 }
 
 dependencies {
+    // AWS SDK v2, S3
+    implementation(platform("software.amazon.awssdk:bom:2.15.14"))
+    implementation ("software.amazon.awssdk:s3:2.15.14")
+
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-data-rest")
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -49,6 +53,10 @@ dependencies {
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+    // * Utils.
+    // - File extension parser.
+    implementation("commons-io:commons-io:2.11.0")
 }
 
 allOpen {
