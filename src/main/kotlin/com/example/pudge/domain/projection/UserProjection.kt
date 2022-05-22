@@ -13,4 +13,8 @@ interface UserProjection {
     fun getName(): String
     fun getAuthorities(): List<AuthorityEntity>
     fun getGroup(): UserGroupEntity?
+    fun getEnabled(): Boolean
+    fun getAccountNonExpired(): Boolean
+    fun getCredentialsNonExpired(): Boolean
+    fun getAccountNonLocked(): Boolean
 }
